@@ -1,0 +1,36 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '-t'
+      - 'asia-northeast1-docker.pkg.dev/jisong-cloud-492111/cloud-run-source-deploy/jisong-cloud-tokyo:$COMMIT_SHA'
+      - '.'
+    id: Build
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - 'asia-northeast1-docker.pkg.dev/jisong-cloud-492111/cloud-run-source-deploy/jisong-cloud-tokyo:$COMMIT_SHA'
+    id: Push
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - services
+      - update
+      - 'jisong-cloud-tokyo'
+      - '--region=asia-northeast1'
+      - '--platform=managed'
+      - '--image=asia-northeast1-docker.pkg.dev/jisong-cloud-492111/cloud-run-source-deploy/jisong-cloud-tokyo:$COMMIT_SHA'
+      - '--service-account=jisong-cloud-run@jisong-cloud-492111.iam.gserviceaccount.com'
+      - '--update-env-vars=GCS_BUCKET_NAME=jisong-cloud-storage'
+      - '--update-secrets=ADMIN_PASSWORD=admin-password:1'
+      - '--quiet'
+    id: Deploy
+
+images:
+  - 'asia-northeast1-docker.pkg.dev/jisong-cloud-492111/cloud-run-source-deploy/jisong-cloud-tokyo:$COMMIT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
