@@ -9,7 +9,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["streamlit", "run", "app.py", \
-     "--server.port=8080", \
-     "--server.address=0.0.0.0", \
-     "--server.headless=true"]
+CMD streamlit run jisong.dev.py --server.port=${PORT:-8080} --server.address=0.0.0.0 --server.headless=true
