@@ -1,9 +1,11 @@
+'''
 CLOUD = {
     "name": "Jisong Cloud",
     "desc": "개인 클라우드",
     "url": "https://cloud.jisong.dev",
     "icon": "☁️",
 }
+'''
 
 APPS = [
     {
